@@ -1,6 +1,6 @@
 {
   "name": "jsdom",
-  "version": "1.0.3",
+  "version": "1.2.0",
   "description": "A JavaScript implementation of the DOM and HTML standards",
   "keywords": [
     "dom",
@@ -10,7 +10,8 @@
   ],
   "maintainers": [
     "Elijah Insua <tmpvar@gmail.com> (http://tmpvar.com)",
-    "Domenic Denicola <domenic@domenicdenicola.com (http://domenic.me/)"
+    "Domenic Denicola <domenic@domenicdenicola.com (http://domenic.me/)",
+    "Sebastian Mayr <sebmaster16@gmail.com> (http://blog.smayr.name/)"
   ],
   "contributors": [
     "Vincent Greene <ulteriorlife@gmail.com>",
@@ -82,7 +83,8 @@
     "q": "^1.0.1",
     "selenium-standalone": "^2.42.0-2.9.0",
     "urlmaster": ">=0.2.15",
-    "wd": "^0.2.21"
+    "wd": "^0.2.21",
+    "jshint": "^2.5.0"
   },
   "browser": {
     "canvas": false,
@@ -91,7 +93,8 @@
   },
   "scripts": {
     "test": "node ./test/runner",
-    "test-browser": "node ./test/browser-runner"
+    "test-browser": "node ./test/browser-runner",
+    "lint": "jshint lib/ && jshint test/"
   },
   "main": "./lib/jsdom"
 }

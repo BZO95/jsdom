@@ -1,3 +1,14 @@
+## 1.2.0
+
+* Add: `NodeFilter`, in particular its constants. (fhemberger)
+* Fix: initial `history.length` should be `1`, not `0`. (rgrove)
+* Fix: `history.pushState` and `history.replaceState` should not fire the `popstate` event. (rgrove)
+
+## 1.1.0
+
+* Add: `document.implementation.createHTMLDocument()`. (fhemberger)
+* Fix: `localName` was sometimes `null` for elements when it should not be. (fhemberger)
+
 ## 1.0.3
 
 * Update: no longer requiring separate `cssstyle` and `cssstyle-browserify` dependencies; now `cssstyle` can be used directly. This also un-pins the `cssstyle` dependency so that future fixes arrive as they appear upstream.
