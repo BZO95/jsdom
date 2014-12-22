@@ -19981,13 +19981,13 @@ exports.tests = {
 
     doc.body.innerHTML = '<input id="x" type="checkbox">';
     var el3 = doc.getElementById("x");
-    el3.checked = false;
+    el3.defaultChecked = false;
 
     test.strictEqual(el3.hasAttribute("checked"), false, "staying false does not insert attribute");
 
     doc.body.innerHTML = '<input id="x" type="checkbox" checked="checked">';
     var el4 = doc.getElementById("x");
-    el4.checked = false;
+    el4.defaultChecked = false;
 
     test.strictEqual(el4.hasAttribute("checked"), false, "changing to false removes attribute");
 
@@ -20151,5 +20151,25 @@ exports.tests = {
     });
 
     test.done();
+  },
+
+  option_element_id_attaching_on_id_change: function(test) {
+    var doc = jsdom.jsdom('<html><head></head><body></body></html>');
+    var option = doc.createElement('option');
+    option.setAttribute('id', 'foo');
+    doc.body.appendChild(option);
+    option.setAttribute('id', 'bar');
+
+    test.ok(!doc.getElementById('foo'), 'getElementById("foo") should not match after the id has been changed from foo to bar');
+    test.ok(doc.getElementById('bar') === option, 'getElementById("bar") should match after the id has been changed from foo to bar');
+    test.done();
+  },
+
+  div_element_to_string: function(test) {
+    var doc = jsdom.jsdom('<html><head></head><body></body></html>');
+    var div = doc.createElement('div');
+
+    test.ok(div.toString() === '[object HTMLDivElement]', 'div.toString() should return "[object HTMLDivElement] just like a browser');
+    test.done();
   }
-}
+};

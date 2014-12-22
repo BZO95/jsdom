@@ -1,3 +1,51 @@
+## 1.5.0
+
+* Add: missing `window.console` methods, viz. `assert`, `clear`, `count`, `debug`, `group`, `groupCollapse`, `groupEnd`, `table`, `time`, `timeEnd`, and `trace`. All except `assert` do nothing for now, but see [#979](https://github.com/tmpvar/jsdom/issues/979) for future plans. (jeffcarp)
+* Tweak: make `childNodes`, and the many places in jsdom that use it, much faster. (Joris-van-der-Wel)
+
+## 1.4.1
+
+* Tweak: faster implementation of `NodeList.prototype.length`, which should speed up common operations like `appendChild` and similar. (Joris-van-der-Wel)
+
+## 1.4.0
+
+* Fix: `HTMLInputElement.prototype.checked` and `defaultChecked` now behave per the spec. (Joris-van-der-Wel)
+* Fix: `HTMLOptionElement.prototype.selected` now behaves per the spec. (Joris-van-der-Wel)
+* Fix: `HTMLInputElement.prototype.value` now behaves per the spec. (Joris-van-der-Wel)
+* Fix: `HTMLTextAreaElement.prototype.value` and `defaultValue` now behave per the spec. (Joris-van-der-Wel)
+* Add: `HTMLTextAreaElement.prototype.defaultValue` now has a setter, and `HTMLTextAreaElement.prototype.textLength` now exists. (Joris-van-der-Wel)
+* Fix: resetting a `<form>` now behaves per spec for all different types of form elements. (Joris-van-der-Wel)
+* Fix: radio buttons reset other radio buttons correctly now per the spec. (Joris-van-der-Wel)
+* Fix: `document.cloneNode` now works. (AVGP)
+* Fix: `hasAttribute` is now case-insensitive, as it should be. (AVGP)
+* Fix: `div.toString()` now returns `[object HTMLDivElement]`. (AVGP)
+
+## 1.3.2
+
+* Fix: check if `module.parent` exists before using it to construct a document's initial URL. Apparently some testing frameworks like Jest do not correctly emulate the module environment; this compensates. (SegFaultx64)
+
+## 1.3.1
+
+* Fix: changing attributes on `<option>` elements will now have the correct consequences. For example changing the `id` attribute now interacts correctly with `document.getElementById`. (Joris-van-der-Wel)
+
+## 1.3.0
+
+* Add: moved `focus` and `blur` methods to `HTMLElement.prototype`, instead of having them only be present on certain element prototypes. Our focus story is still not very spec-compliant, but this is a step in the right direction. (vincentsiao)
+
+## 1.2.3
+
+* Tweak: improve performance of `Node.prototype.insertBefore`, `Node.prototype.removeChild`, and several `AttributeList` methods. (Joris-van-der-Wel)
+
+## 1.2.2
+
+* Fix: `querySelectorAll` correctly coerces its argument to a string; notably this allows you to pass arrays. (jeffcarp)
+* Fix: the `data` setter on text nodes correctly coerces the new value to a string. (medikoo)
+* Fix: `document.toString()` now returns `[object HTMLDocument]`. (jeffcarp)
+
+## 1.2.1
+
+* Fix: handling of `<template>` element parsing and serialization, now that it is supported by parse5. (inikulin)
+
 ## 1.2.0
 
 * Add: `NodeFilter`, in particular its constants. (fhemberger)

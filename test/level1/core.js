@@ -21901,5 +21901,30 @@ exports.tests = {
     var newLength = doc.getElementsByTagName('acronym').length;
     test.equal(newLength, origLength + 1, 'Num elements queried has changed');
     test.done();
+  },
+
+  restrict_text_data_type: function(test) {
+    var dom = require("../../lib/jsdom/level1/core").dom.level1.core;
+    var doc = new dom.Document('');
+    var testObj = {
+      valueOf: function () { return 34; },
+      toString: function () { return 'str' }
+    };
+    var text = doc.createTextNode(testObj);
+    test.ok(text.data === 'str', 'String type forced (create)');
+    text.data = testObj;
+    test.ok(text.data === 'str', 'String type forced (set)');
+    test.done();
+  },
+  
+  hc_docclonenodetrue: function(test) {
+    var doc;
+    var docClone;
+
+    doc = hc_staff.hc_staff();
+    docClone = doc.cloneNode(true);
+    test.notDeepEqual(doc, docClone, 'clone');
+
+    test.done();
   }
 };

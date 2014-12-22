@@ -1,7 +1,7 @@
 "use strict";
 
-var jsdom = require("../..");
 var load = require("../util").load(__dirname);
+var jsdom = require("../..");
 
 exports["setAttribute should change the first attribute, irrespective of namespace"] = function (t) {
   var doc = load("minimal");
@@ -178,5 +178,16 @@ exports["setting an attribute should not overwrite the fields of an `AttributeLi
   body.setAttributeNS("foo", "length", "first");
 
   t.equal(body.attributes.length, 1, "one attribute");
+  t.done();
+};
+
+exports["hasAttribute should work with all attribute casings"] = function (t) {
+  var document = jsdom.jsdom("<span data-e2='2' data-F2='3' id='t'></span>");
+
+  t.ok(document.getElementById("t").hasAttribute("data-e2"));
+  t.ok(document.getElementById("t").hasAttribute("data-E2"));
+  t.ok(document.getElementById("t").hasAttribute("data-f2"));
+  t.ok(document.getElementById("t").hasAttribute("data-F2"));
+
   t.done();
 };
