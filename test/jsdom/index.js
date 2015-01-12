@@ -193,8 +193,10 @@ exports.tests = {
 
   // TODO: break into two tests
   apply_jsdom_features_at_build_time: function(test) {
-    var doc  = new (jsdom.defaultLevel.Document)(),
-        doc2 = new (jsdom.defaultLevel.Document)(),
+    var dom = jsdom.jsdom().parentWindow;
+
+    var doc = new (dom.Document)(),
+        doc2 = new (dom.Document)(),
         defaults = jsdom.defaultDocumentFeatures;
     jsdom.applyDocumentFeatures(doc);
     for (var i=0; i<defaults.length; i++) {
@@ -511,21 +513,21 @@ exports.tests = {
     test.done();
   },
 
-  matchesselector: function(test) {
+  matches: function(test) {
     var html = '<html><body><div id="main"><p class="foo">Foo</p><p>Bar</p></div></body></html>';
     var document = jsdom.jsdom(html);
     var div = document.body.children.item(0);
 
     var element = document.querySelector("#main p");
-    test.equal(element.matchesSelector("#main p"), true, 'p and first-p');
+    test.equal(element.matches("#main p"), true, 'p and first-p');
     var element2 = div.querySelector("p");
-    test.equal(element2.matchesSelector("p"), true, 'p and first-p');
+    test.equal(element2.matches("p"), true, 'p and first-p');
     var element3 = document.querySelector("#main p:not(.foo)");
-    test.equal(element3.matchesSelector("#main p:not(.foo)"), true, 'p and second-p');
+    test.equal(element3.matches("#main p:not(.foo)"), true, 'p and second-p');
 
-    test.equal(element.matchesSelector("#asdf"), false, "doesn't match wrong selector");
-    test.equal(element2.matchesSelector("#asdf"), false, "doesn't match wrong selector");
-    test.equal(element3.matchesSelector("#asdf"), false, "doesn't match wrong selector");
+    test.equal(element.matches("#asdf"), false, "doesn't match wrong selector");
+    test.equal(element2.matches("#asdf"), false, "doesn't match wrong selector");
+    test.equal(element3.matches("#asdf"), false, "doesn't match wrong selector");
 
     test.done();
   },
@@ -1136,16 +1138,6 @@ exports.tests = {
     test.done();
   },
 
-  jsdom_levels: function(test) {
-    var level1 = jsdom.level(1);
-    var level2 = jsdom.level(2);
-
-    test.notEqual(level1, level2, 'Level1.core and level2.core are different instances');
-    test.equal(level1.HTMLCollection, null, 'Level1 dom shouldn\'t have HTMLCollection function.');
-
-    test.done();
-  },
-
   issue_335_inline_event_handlers : function(test) {
     var doc = jsdom.jsdom('<a onclick="somefunction()">call some function</a>');
     var a = doc.getElementsByTagName('a').item(0);
@@ -1265,23 +1257,24 @@ exports.tests = {
     test.done();
   },
 
-  css_classes_should_be_attached_to_dom : function(test) {
-    [jsdom.level(2, 'core'), jsdom.level(3, 'core')].forEach(function (dom) {
-      test.notEqual(dom.StyleSheet, undefined);
-      test.notEqual(dom.MediaList, undefined);
-      test.notEqual(dom.CSSStyleSheet, undefined);
-      test.notEqual(dom.CSSRule, undefined);
-      test.notEqual(dom.CSSStyleRule, undefined);
-      test.notEqual(dom.CSSMediaRule, undefined);
-      test.notEqual(dom.CSSImportRule, undefined);
-      test.notEqual(dom.CSSStyleDeclaration, undefined);
-    });
+  css_classes_should_be_attached_to_dom: function (test) {
+    var dom = jsdom.jsdom().parentWindow;
+
+    test.notEqual(dom.StyleSheet, undefined);
+    test.notEqual(dom.MediaList, undefined);
+    test.notEqual(dom.CSSStyleSheet, undefined);
+    test.notEqual(dom.CSSRule, undefined);
+    test.notEqual(dom.CSSStyleRule, undefined);
+    test.notEqual(dom.CSSMediaRule, undefined);
+    test.notEqual(dom.CSSImportRule, undefined);
+    test.notEqual(dom.CSSStyleDeclaration, undefined);
+
     test.done();
   },
 
   lookup_namednodemap_by_property : function (test) {
     var doc = jsdom.jsdom();
-    var core = jsdom.level(3, 'core');
+    var core = doc.parentWindow;
     var map = new core.NamedNodeMap(doc);
     test.equal(map.length, 0);
     var attr1 = doc.createAttribute('attr1');
@@ -1303,7 +1296,7 @@ exports.tests = {
 
   issue_723_namednodemap_property_names_that_collide_with_method_names : function (test) {
     var doc = jsdom.jsdom();
-    var core = jsdom.level(1, 'core');
+    var core = doc.parentWindow;
     var map = new core.NamedNodeMap(doc);
     var fooAttribute = doc.createAttribute('foo');
     map.setNamedItem(fooAttribute);

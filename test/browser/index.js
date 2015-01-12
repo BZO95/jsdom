@@ -1,4 +1,4 @@
-var dom = require("../../lib/jsdom/level2/core").dom.level2.core;
+var dom = require("../../lib/jsdom/living");
 var jsdom = require('../../lib/jsdom');
 var serializeDocument = require('../../lib/jsdom').serializeDocument;
 var browser;
