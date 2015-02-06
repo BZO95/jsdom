@@ -5,11 +5,9 @@ var toPathname = require("../util").toPathname(__dirname);
 var toFileUrl = require("../util").toFileUrl(__dirname);
 var load = require("../util").load(__dirname +  "/html/");
 
-var html = require("../../lib/jsdom/living");
-var getImplementation = function() {
-  var doc = new html.HTMLDocument();
-  return doc.implementation;
-};
+function getImplementation() {
+  return jsdom.jsdom().implementation;
+}
 
 exports.tests = {
   /**
@@ -1459,154 +1457,6 @@ exports.tests = {
 
   /**
    *
-   Checks that Node.isSupported("hTmL", null) returns true.
-   * @author Curt Arnold
-   * @see http://www.w3.org/TR/DOM-Level-2-Core/core#Level-2-Core-Node-supports
-   * @see http://www.w3.org/TR/DOM-Level-2-HTML/html#ID-62018039
-   */
-  HTMLBodyElement07: function(test) {
-    var success;
-    var doc;
-    var body;
-    var state;
-    var version = null;
-    var docRef = null;
-    if (typeof(this.doc) != 'undefined') {
-      docRef = this.doc;
-    }
-    doc = load("document");
-    body = doc.body;
-    state = body.isSupported("hTmL",version);
-    test.ok(state, 'isSupportedHTML');
-    test.done();
-  },
-
-  /**
-   *
-   Checks that Node.isSupported("hTmL", "2.0") returns true.
-   * @author Curt Arnold
-   * @see http://www.w3.org/TR/DOM-Level-2-Core/core#Level-2-Core-Node-supports
-   * @see http://www.w3.org/TR/DOM-Level-2-HTML/html#ID-62018039
-   */
-  HTMLBodyElement08: function(test) {
-    var success;
-    var doc;
-    var body;
-    var state;
-    var version = "2.0";
-    var docRef = null;
-    if (typeof(this.doc) != 'undefined') {
-      docRef = this.doc;
-    }
-    doc = load("document");
-    body = doc.body;
-    state = body.isSupported("hTmL",version);
-    test.ok(state, 'isSupportedHTML');
-    test.done();
-  },
-
-  /**
-   *
-   Checks that Node.isSupported("xhTmL", null) returns true if hasFeature("XML", null) is true.
-   * @author Curt Arnold
-   * @see http://www.w3.org/TR/DOM-Level-2-Core/core#Level-2-Core-Node-supports
-   * @see http://www.w3.org/TR/DOM-Level-2-HTML/html#ID-62018039
-   */
-  HTMLBodyElement09: function(test) {
-    var success;
-    var doc;
-    var body;
-    var state;
-    var hasXML;
-    var version = null;
-    var docRef = null;
-    if (typeof(this.doc) != 'undefined') {
-      docRef = this.doc;
-    }
-    doc = load("document");
-    body = doc.body;
-    hasXML = body.isSupported("XML",version);
-    state = body.isSupported("xhTmL",version);
-    test.equal(state, hasXML, "isSupportedXHTML");
-    test.done();
-  },
-
-  /**
-   *
-   Checks that Node.isSupported("xhTmL", "2.0") returns true if hasFeature("XML", "2.0") is true.
-   * @author Curt Arnold
-   * @see http://www.w3.org/TR/DOM-Level-2-Core/core#Level-2-Core-Node-supports
-   * @see http://www.w3.org/TR/DOM-Level-2-HTML/html#ID-62018039
-   */
-  HTMLBodyElement10: function(test) {
-    var success;
-    var doc;
-    var body;
-    var state;
-    var hasXML;
-    var version = "2.0";
-    var docRef = null;
-    if (typeof(this.doc) != 'undefined') {
-      docRef = this.doc;
-    }
-    doc = load("document");
-    body = doc.body;
-    hasXML = body.isSupported("XML",version);
-    state = body.isSupported("xhTmL",version);
-    test.equal(state, hasXML, "isSupportedXHTML");
-    test.done();
-  },
-
-  /**
-   *
-   Checks that Node.isSupported("cOrE", null) returns true.
-   * @author Curt Arnold
-   * @see http://www.w3.org/TR/DOM-Level-2-Core/core#Level-2-Core-Node-supports
-   * @see http://www.w3.org/TR/DOM-Level-2-HTML/html#ID-62018039
-   */
-  HTMLBodyElement11: function(test) {
-    var success;
-    var doc;
-    var body;
-    var state;
-    var version = null;
-    var docRef = null;
-    if (typeof(this.doc) != 'undefined') {
-      docRef = this.doc;
-    }
-    doc = load("document");
-    body = doc.body;
-    state = body.isSupported("cOrE",version);
-    test.ok(state, 'isSupportedCore');
-    test.done();
-  },
-
-  /**
-   *
-   Checks that Node.isSupported("cOrE", "2.0") returns true.
-   * @author Curt Arnold
-   * @see http://www.w3.org/TR/DOM-Level-2-Core/core#Level-2-Core-Node-supports
-   * @see http://www.w3.org/TR/DOM-Level-2-HTML/html#ID-62018039
-   */
-  HTMLBodyElement12: function(test) {
-    var success;
-    var doc;
-    var body;
-    var state;
-    var version = "2.0";
-    var docRef = null;
-    if (typeof(this.doc) != 'undefined') {
-      docRef = this.doc;
-    }
-    doc = load("document");
-    body = doc.body;
-    state = body.isSupported("cOrE",version);
-    test.ok(state, 'isSupportedCore');
-    test.done();
-  },
-
-  /**
-   *
    The form attribute returns the FORM element containing this control.
    Retrieve the form attribute and examine its value.
    * @author NIST
@@ -2880,142 +2730,6 @@ exports.tests = {
     doc.writeln("&lt;/body>");
     doc.writeln("&lt;/html>");
     doc.close();
-    test.done();
-  },
-
-  /**
-   *
-   Checks that Node.isSupported("hTmL", null) returns true.
-   * @author Curt Arnold
-   * @see http://www.w3.org/TR/DOM-Level-2-Core/core#Level-2-Core-Node-supports
-   * @see http://www.w3.org/TR/DOM-Level-2-HTML/html#ID-26809268
-   */
-  HTMLDocument22: function(test) {
-    var success;
-    var doc;
-    var state;
-    var version = null;
-    var docRef = null;
-    if (typeof(this.doc) != 'undefined') {
-      docRef = this.doc;
-    }
-    doc = load("document");
-    state = doc.isSupported("hTmL",version);
-    test.ok(state, 'isSupportedHTML');
-    test.done();
-  },
-
-  /**
-   *
-   Checks that Node.isSupported("hTmL", "2.0") returns true.
-   * @author Curt Arnold
-   * @see http://www.w3.org/TR/DOM-Level-2-Core/core#Level-2-Core-Node-supports
-   * @see http://www.w3.org/TR/DOM-Level-2-HTML/html#ID-26809268
-   */
-  HTMLDocument23: function(test) {
-    var success;
-    var doc;
-    var state;
-    var version = "2.0";
-    var docRef = null;
-    if (typeof(this.doc) != 'undefined') {
-      docRef = this.doc;
-    }
-    doc = load("document");
-    state = doc.isSupported("hTmL",version);
-    test.ok(state, 'isSupportedHTML');
-    test.done();
-  },
-
-  /**
-   *
-   Checks that Node.isSupported("xhTmL", null) returns true if hasFeature("XML", null) is true.
-   * @author Curt Arnold
-   * @see http://www.w3.org/TR/DOM-Level-2-Core/core#Level-2-Core-Node-supports
-   * @see http://www.w3.org/TR/DOM-Level-2-HTML/html#ID-26809268
-   */
-  HTMLDocument24: function(test) {
-    var success;
-    var doc;
-    var state;
-    var hasXML;
-    var version = null;
-    var docRef = null;
-    if (typeof(this.doc) != 'undefined') {
-      docRef = this.doc;
-    }
-    doc = load("document");
-    hasXML = doc.isSupported("XML",version);
-    state = doc.isSupported("xhTmL",version);
-    test.equal(state, hasXML, "isSupportedXHTML");
-    test.done();
-  },
-
-  /**
-   *
-   Checks that Node.isSupported("xhTmL", "2.0") returns true if hasFeature("XML", "2.0") is true.
-   * @author Curt Arnold
-   * @see http://www.w3.org/TR/DOM-Level-2-Core/core#Level-2-Core-Node-supports
-   * @see http://www.w3.org/TR/DOM-Level-2-HTML/html#ID-26809268
-   */
-  HTMLDocument25: function(test) {
-    var success;
-    var doc;
-    var state;
-    var hasXML;
-    var version = "2.0";
-    var docRef = null;
-    if (typeof(this.doc) != 'undefined') {
-      docRef = this.doc;
-    }
-    doc = load("document");
-    hasXML = doc.isSupported("XML",version);
-    state = doc.isSupported("xhTmL",version);
-    test.equal(state, hasXML, "isSupportedXHTML");
-    test.done();
-  },
-
-  /**
-   *
-   Checks that Node.isSupported("cOrE", null) returns true.
-   * @author Curt Arnold
-   * @see http://www.w3.org/TR/DOM-Level-2-Core/core#Level-2-Core-Node-supports
-   * @see http://www.w3.org/TR/DOM-Level-2-HTML/html#ID-26809268
-   */
-  HTMLDocument26: function(test) {
-    var success;
-    var doc;
-    var state;
-    var version = null;
-    var docRef = null;
-    if (typeof(this.doc) != 'undefined') {
-      docRef = this.doc;
-    }
-    doc = load("document");
-    state = doc.isSupported("cOrE",version);
-    test.ok(state, 'isSupportedCore');
-    test.done();
-  },
-
-  /**
-   *
-   Checks that Node.isSupported("cOrE", "2.0") returns true.
-   * @author Curt Arnold
-   * @see http://www.w3.org/TR/DOM-Level-2-Core/core#Level-2-Core-Node-supports
-   * @see http://www.w3.org/TR/DOM-Level-2-HTML/html#ID-26809268
-   */
-  HTMLDocument27: function(test) {
-    var success;
-    var doc;
-    var state;
-    var version = "2.0";
-    var docRef = null;
-    if (typeof(this.doc) != 'undefined') {
-      docRef = this.doc;
-    }
-    doc = load("document");
-    state = doc.isSupported("cOrE",version);
-    test.ok(state, 'isSupportedCore');
     test.done();
   },
 
@@ -20056,7 +19770,7 @@ exports.tests = {
   filename_with_spaces_in_script_tag_can_be_read: function(test) {
     jsdom.env(
       '<html><head></head><body></body></html>',
-      ['./html/files/js/script with spaces.js'],
+      [path.resolve(__dirname, './html/files/js/script with spaces.js')],
       function(err, window){
         test.strictEqual(err, null, "There should be no errors when using scripts with spaces in their filenames");
         test.done();
@@ -20114,6 +19828,31 @@ exports.tests = {
         test.equal(input1.checked, false, 'Radio input in the same form should be unchecked');
         test.ok(input2.checked, 'The radio input should be checked');
         test.ok(input3.checked, 'Radio input in a different form should still be checked');
+        test.done();
+    });
+  },
+
+  radio_group_with_same_name_outside_form: function(test) {
+    // NOTE: this is virtually the same as the radio_group_with_same_name_in_several_forms_work test,
+    // however this test moves the first radio group outside of a form so they are siblings
+    // of the form containing the other radio group.
+    var html = '<div>' +
+        '<input type="radio" name="group1" value="3" checked="checked" id="form1-input1" />' +
+        '<input type="radio" name="group1" value="2" id="form1-input2" />' +
+        '<form>' +
+        '<input type="radio" name="group1" value="1" checked="checked" id="form2-input1" />' +
+        '<input type="radio" name="group1" value="5" id="form2-input2" /></form>' +
+        '</div>';
+    jsdom.env(html, function (err, window) {
+        var input1 = window.document.getElementById('form1-input1');
+        var input2 = window.document.getElementById('form1-input2');
+        var input3 = window.document.getElementById('form2-input1');
+
+        input2.checked = true;
+
+        test.equal(input1.checked, false, 'Radio input in the same group should be unchecked');
+        test.ok(input2.checked, 'The radio input should be checked');
+        test.ok(input3.checked, 'Radio input in a sibling form should still be checked');
         test.done();
     });
   },

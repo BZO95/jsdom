@@ -131,6 +131,7 @@ jsdom.env(config);
   - `cookieDomain`: a cookie domain for the manually set cookie; defaults to `127.0.0.1`.
 - `config.headers`: an object giving any headers that will be used while loading the HTML from `config.url`, if applicable
 - `config.features`: see Flexibility section below. **Note**: the default feature set for `jsdom.env` does _not_ include fetching remote JavaScript and executing it. This is something that you will need to _carefully_ enable yourself.
+- `config.resourceLoader`: a function that intercepts subresource requests and allows you to re-route them, modify, or outright replace them with your own content. More below.
 - `config.done`, `config.loaded`, `config.created`: see below.
 
 Note that at least one of the callbacks (`done`, `loaded`, or `created`) is required, as is one of `html`, `file`, or `url`.
@@ -266,6 +267,47 @@ Enables/disables JavaScript execution
 
 Filters resource downloading and processing to disallow those matching the given regular expression
 
+#### Custom External Resource Loader
+
+jsdom lets you intercept subresource requests using `config.resourceLoader`. `config.resourceLoader` expects a function which is called for each subresource request with the following arguments:
+
+- `resource`: a vanilla JavaScript object with the following properties
+  - `url`: a parsed URL object.
+  - `cookie`: the content of the HTTP cookie header (`key=value` pairs separated by semicolons).
+  - `cookieDomain`: the cookie domain as set in `config`, defaults to `127.0.0.1`.
+  - `baseUrl`: the base URL used to resolve relative URLs.
+  - `defaultFetch(callback)`: a convenience method to fetch the resource online.
+- `callback`: a function to be called with two arguments
+  - `error`: either `null`, if nothing goes wrong, or an `Error` object.
+  - `body`: a string representing the body of the resource.
+
+For example, fetching all JS files from a different directory and running them in strict mode:
+
+```js
+var jsdom = require("jsdom");
+
+jsdom.env({
+  url: "http://example.com/",
+  resourceLoader: function (resource, callback) {
+    var pathname = resource.url.pathname;
+    if (/\.js$/.test(pathname)) {
+      resource.url.pathname = pathname.replace("/js/", "/js/raw/");
+      resource.defaultFetch(function (err, body) {
+        if (err) return callback(err);
+        callback(null, '"use strict";\n' + body);
+      });
+    } else {
+      resource.defaultFetch(callback);
+    }
+  },
+  features: {
+    FetchExternalResources: ["script"],
+    ProcessExternalResources: ["script"],
+    SkipExternalResources: false
+  }
+});
+```
+
 ### Canvas
 
 jsdom includes support for using the [canvas](https://npmjs.org/package/canvas) package to extend any `<canvas>` elements with the canvas API. To make this work, you need to include canvas as a dependency in your project, as a peer of jsdom. If jsdom can find the canvas package, it will use it, but if it's not present, then `<canvas>` elements will behave like `<div>`s.
@@ -328,6 +370,30 @@ var doc = jsdom("<!DOCTYPE html>hello");
 
 serializeDocument(doc) === "<!DOCTYPE html><html><head></head><body>hello</body></html>";
 doc.documentElement.outerHTML === "<html><head></head><body>hello</body></html>";
+```
+
+### Capturing Console Output
+
+#### Forward a window's console output to the Node.js console
+
+```js
+var jsdom = require("jsdom");
+var window = jsdom.jsdom().parentWindow;
+
+jsdom.getVirtualConsole(window).sendTo(console);
+```
+
+#### Get an event emitter for a window's console
+
+```js
+var jsdom = require("jsdom");
+var window = jsdom.jsdom().parentWindow;
+
+var virtualConsole = jsdom.getVirtualConsole(window);
+
+virtualConsole.on("log", function (message) {
+  console.log("console.log called ->", message);
+});
 ```
 
 ## What Standards Does jsdom Support, Exactly?

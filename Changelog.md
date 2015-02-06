@@ -1,3 +1,44 @@
+## 3.1.0
+
+* Added support for [custom external resource loading](https://github.com/tmpvar/jsdom#custom-external-resource-loader). (tobie)
+
+## 3.0.3
+
+* Fixed some stray byte-order marks in a couple files, which incidentally [break Browserify](https://github.com/substack/node-browserify/issues/1095). (sterpe)
+
+## 3.0.2
+
+* Fixed another edge case where unchecking a radio button would incorrectly uncheck radio buttons outside the containing form. (zpao)
+
+## 3.0.1
+
+* Fixed errors when serializing text nodes (possibly only occurred when inside `<template>`).
+* Handle null bytes being passed to `jsdom.env`'s autodetecting capabilities. (fluffybunnies)
+* Handle empty HTML strings being passed to `jsdom.env`'s `html` option. (fluffybunnies)
+
+## 3.0.0
+
+This release updates large swathes of the DOM APIs to conform to the standard, mostly by removing old stuff. It also fixes a few bugs, introduces a couple new features, and changes some defaults.
+
+3.0.x will be the last release of jsdom to support Node.js. All future releases (starting with 4.0.0) will require [io.js](https://iojs.org/), whose [new `vm` module](https://github.com/iojs/io.js/blob/v1.x/CHANGELOG.md#vm) will allow us to remove our contextify native-module dependency. (Given that I submitted the relevant patch to joyent/node [1.5 years ago](https://github.com/joyent/node/commit/7afdba6e0bc3b69c2bf5fdbd59f938ac8f7a64c5), I'm very excited that we can finally use it!)
+
+* By default documents now use `about:blank` as their URL, instead of trying to infer some type of file URL from the call site (in Node.js) or using `location.href` (in browsers).
+* Introduced a new "virtual console" abstraction for capturing console output from inside the page. [See the readme for more information.](https://github.com/tmpvar/jsdom#capturing-console-output) Note that `console.error` will no longer contribute to the (non-standard, and likely dying in the future) `window.errors` array. (jeffcarp)
+* Added the named `new Image(width, height)` constructor. (vinothkr)
+* Fixed an exception when using `querySelector` with selectors like `div:last-child > span[title]`.
+* Removed all traces of entities, entity types, notations, default attributes, and CDATA sections.
+* Differentiated between XML and HTML documents better, for example in how they handle the casing of tag names and attributes.
+* Updated `DOMImplementation` to mostly work per-spec, including removing `addFeature` and `removeFeature` methods, the `ownerDocument` property, and making `hasFeature` always return `true`.
+* Re-did the `CharacterData` implementation to follow the algorithms in the DOM Standard; this notably removes a few exceptions that were previously thrown.
+* Re-did `Comment`, `Text`, and `ProcessingInstruction` to follow the DOM Standard and derive from `CharacterData`.
+* Re-did `DocumentType` to follow the DOM Standard and be much simpler, notably removing notations, entities, and default attributes.
+* Fixed a variety of accessors on `Node`, `Element`, `Attr`, and `Document`; some were removed that were nonstandard (especially setters); others were updated to reflect the spec; etc.
+* Re-did name/qname validation, which is done by various APIs, to work with the xml-name-validator package and some centralized algorithms.
+* Made the XML parser at least somewhat aware of processing instructions.
+* Cleaned up doctype parsing and association between doctypes and documents. More exotic doctypes should parse better now.
+* `document.contentType` now is generally inferred from the parsing mode of the document.
+* Moved some properties to `Document.prototype` and `Window.prototype` instead of setting them as own properties during the document/window creation. This should improve memory usage (as well as spec compliance).
+
 ## 2.0.0
 
 This release is largely a refactoring release to remove the defunct concept of "levels" from jsdom, in favor of the [living standard model](https://wiki.whatwg.org/wiki/FAQ#What_does_.22Living_Standard.22_mean.3F) that browsers follow. Although the code is still organized that way, that's now [noted as a historical artifact](https://github.com/tmpvar/jsdom/blob/2ff5747488ad4b518fcef97a026c82eab42a0a14/lib/README.md). The public API changes while doing so were fairly minimal, but this sets the stage for a cleaner jsdom code structure going forward.
